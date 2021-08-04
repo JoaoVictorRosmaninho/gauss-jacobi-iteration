@@ -1,0 +1,1 @@
+gcc input/input.c mem/mem.c -Wall -Wextra -Werror -o run
