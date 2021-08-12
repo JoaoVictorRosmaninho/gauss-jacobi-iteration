@@ -1,4 +1,4 @@
-#include "input.h"
+#include "../head.h"
 
 void readInput(char *input[], char *fileName) {
     FILE *fin = NULL;
