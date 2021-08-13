@@ -1,12 +1,15 @@
-#include <stdlib.h>
+#ifndef HEADER_H
+# define HEADER_H
+# include "../header.h"
+#endif
 
 double **mem_biArrayAlloc(int dimension, char value) {
     double **ptr = 0;
     if ((ptr = (double **) calloc(dimension, sizeof(double *))) == NULL)
-        showMessage("Err, insuficient memory");
+        showMessage("Err, insuficient memory",MEM_ERROR);
     for (char i = 0; i < dimension; i++) {
         if((ptr[i] = (double *) calloc(dimension, sizeof(double))) == NULL)
-            showMessage("Err, insuficient memory");
+            showMessage("Err, insuficient memory", MEM_ERROR);
     }
     return (ptr);
 }
@@ -14,7 +17,7 @@ double **mem_biArrayAlloc(int dimension, char value) {
 double *mem_arrayAlloc(int size) {
     double *ptr = 0;
      if ((ptr = (double *) calloc(size, sizeof(double))) == NULL)
-        showMessage("Err, insuficient memory");
+        showMessage("Err, insuficient memory", MEM_ERROR);
     return (ptr);
 }
 

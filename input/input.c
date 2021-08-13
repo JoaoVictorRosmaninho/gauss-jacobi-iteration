@@ -1,19 +1,32 @@
-#include "../head.h"
+#ifndef HEADER_H
+# define HEADER_H
+# include "../header.h"
+#include <stdint.h>
+#endif
 
-void readInput(char *input[], char *fileName) {
+void readInput(double mat[][4], char *fileName, uint8_t line, uint8_t col) {
     FILE *fin = NULL;
-    unsigned char number[20];
-    unsigned short int index = 0;
+    char number[MAX_NUM_SIZE];
+    uint8_t index = 0, aux_line = 0, aux_col = 0;
     char ch;
 
     if ((fin = fopen(fileName, "r")) == NULL)
-        showMessage("Error opening file", OPEN_FILE_ERR);
-    
+        showMessage("Error opening file", OPEN_FILE_ERR);    
     while ((ch = fgetc(fin)) != EOF) {
-        if (isNumber(ch) || ch == '.')
+        if (str_isNumber(ch) || ch == '.')
             number[index++] = ch;
-        else if (isSpace(ch))
-            index = 0;               
+        else {
+            number[index] = '\0';
+            if (aux_col < col)
+                mat[aux_line][aux_col++] = strtodouble(number);
+            else {
+                aux_line++;
+                aux_col = 0;
+            }
+            index = 0;
+        }
     }
+    number[index] = '\0';
+    printf("%s ", number);   
     fclose(fin);
 }
