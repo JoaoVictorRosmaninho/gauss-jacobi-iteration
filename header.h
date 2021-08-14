@@ -12,10 +12,10 @@ void showMessage(const char *msg, unsigned char errCod);
 unsigned int str_isNumber(char ch);
 
 /* */
-unsigned int str_isSpace(char ch);
+unsigned int str_isvalid(char ch);
 
 /* */
-void readInput(double mat[][4], char *fileName, uint8_t line, uint8_t col);
+void readInput(double mat[][2], char *fileName, uint8_t line, uint8_t col);
 
 double strtodouble(char *number);
 

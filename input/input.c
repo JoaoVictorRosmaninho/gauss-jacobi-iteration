@@ -4,7 +4,7 @@
 #include <stdint.h>
 #endif
 
-void readInput(double mat[][4], char *fileName, uint8_t line, uint8_t col) {
+void readInput(double mat[][2], char *fileName, uint8_t line, uint8_t col) {
     FILE *fin = NULL;
     char number[MAX_NUM_SIZE];
     uint8_t index = 0, aux_line = 0, aux_col = 0;
