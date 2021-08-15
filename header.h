@@ -4,7 +4,7 @@
 
 #define MAX_NUM_SIZE 20
 
-enum {OPEN_FILE_ERR, MEM_ERROR, VALUE_ERROR};
+enum {INVALID_PARAMETERS, INVALID_VALUE,  OPEN_FILE_ERR, MEM_ERROR, VALUE_ERROR, INT_CONVERSION_ERROR};
 
 void showMessage(const char *msg, unsigned char errCod);
 
@@ -15,7 +15,12 @@ unsigned int str_isNumber(char ch);
 unsigned int str_isvalid(char ch);
 
 /* */
-void readInput(double mat[][2], char *fileName, uint8_t line, uint8_t col);
+double **readInput(FILE *fin, uint16_t value);
 
-double strtodouble(char *number);
+double math_atof(char *number);
 
+int math_atoi(char *ini_number);
+
+int math_pow(int base, uint8_t exp);
+
+double **mem_matrizAlloc(uint16_t dimension);

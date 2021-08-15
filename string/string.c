@@ -4,8 +4,7 @@
 #endif
 
 unsigned int str_isvalid(char ch) {
-   // return ((ch >= '\t' &&  ch <= '\r') || (ch == ' '));
-   return (ch == ' ' || ch == '\n');
+   return ((ch >= '\t' &&  ch <= '\r') || (ch == ' '));
 }
 
 unsigned int str_isNumber(char ch) {

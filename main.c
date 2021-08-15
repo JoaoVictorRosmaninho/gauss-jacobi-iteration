@@ -3,27 +3,25 @@
 # include "header.h"
 #endif
 
-/*int main(int argc, char *argv[]) {
-    if (argc != 2)
-        showMessage("parametros invalidos");
-    
-    int **array = biArrayAlloc(argv[1], argv[2]);
-        
-}*/
+uint16_t size;
 
-int main(void) {
-    double mat[2][2];
-    readInput(mat, "in.txt", 2, 2);
-    /*for (int i = 0; i < 2; i++) {
-         for (int j = 0; j < 2; j++)
-            printf("%.4lf", mat[i][j]);
-         putchar('\n');
-<<<<<<< HEAD
-    }*/
-}
-=======
+int main(int argc, char *argv[]) {
+    if (argc != 3)
+        showMessage("parametros invalidos", INVALID_PARAMETERS);    
+    FILE *fin;
+    size = math_atoi(argv[2]);
+    if ((fin = fopen(argv[1], "r")) == NULL)
+        showMessage("Error opening file", OPEN_FILE_ERR);    
+    double **mat = readInput(fin, size);
+    for (uint8_t i = 0; i < size; i++) {
+        for (uint8_t j = 0; j < size; j++)
+            printf("%.3lf ", mat[i][j]);
+        putchar('\n');  
     }
+    return 0;
+            
 }
+
 
 /*
 void calculaXn(int Xn,float Matriz[51][51], float vetorXn[50],float valoresAtualizados[50]){
@@ -115,4 +113,3 @@ void Gauss_Seidel(float Matriz[51][51], float vetorXn[50], float valoresAtualiza
 }
 
 */
->>>>>>> 0499cc1e6c4c85a313e3ad3e3bdf991fba61b23b
