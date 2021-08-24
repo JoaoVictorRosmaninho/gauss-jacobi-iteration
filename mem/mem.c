@@ -1,18 +1,23 @@
 #ifndef HEADER_H
 # define HEADER_H
 # include "../header.h"
-#include <sys/types.h>
+#include <stdint.h>
 #endif
 
-double **mem_matrizAlloc(uint16_t dimension) {
+Biarray *mem_biArrayAlloc(uint16_t row, uint16_t col) {
     double **ptr = 0;
-    if ((ptr = (double **) calloc(dimension, sizeof(double *))) == NULL)
+    Biarray *ptr_mat = 0;
+    if ((ptr_mat = (Biarray *) calloc(1, sizeof(Biarray))) == NULL)
         showMessage("Err, insuficient memory",MEM_ERROR);
-    for (uint16_t i = 0; i < dimension; i++) {
-        if((ptr[i] = (double *) calloc(dimension, sizeof(double))) == NULL)
+    ptr_mat->size_row = row;
+    ptr_mat->size_col = col;
+    if ((ptr_mat->array = (double **) calloc(row, sizeof(double *))) == NULL)
+        showMessage("Err, insuficient memory",MEM_ERROR);
+    for (uint16_t i = 0; i < row; i++) {
+        if((ptr_mat->array[i] = (double *) calloc(col, sizeof(double))) == NULL)
             showMessage("Err, insuficient memory", MEM_ERROR);
     }
-    return (ptr);
+    return (ptr_mat);
 }
 
 double *mem_arrayAlloc(int size) {

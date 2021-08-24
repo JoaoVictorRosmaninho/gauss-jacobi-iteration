@@ -16,43 +16,10 @@ int main(int argc, char *argv[]) {
     if (argc != 4)
         showMessage("parametros invalidos", INVALID_PARAMETERS);    
     FILE *fin;
-    size = math_atoi(argv[3]);
     if ((fin = fopen(argv[1], "r")) == NULL)
         showMessage("Error opening file", OPEN_FILE_ERR);    
-    double **mat = readInput(fin, size);
-    if ((fin = fopen(argv[2], "r")) == NULL)
-        showMessage("Error opening file", OPEN_FILE_ERR);    
-    double **testeCOluna = readInput(fin, size);
-    double valoresAtualizados[size],valoresAtuais[size],valorUltCol[size];
-    for (size_t i = 0; i < size; i++)
-    {
-        valorUltCol[i] = testeCOluna[0][i];
-        valoresAtuais[i] = 0;
-        valoresAtualizados[i] = 0;
-    }
-
-    
-    Gauss_Jacobi(mat,valorUltCol,valoresAtuais,valoresAtualizados);
-
-
-    /*
-    for (int i = 0; i < size; i++) {
-        for (uint8_t j = 0; j < size; j++)
-            printf("%.3lf ", mat[i][j]);
-        putchar('\n');  
-    }
-    */
-    /*
-    for (int i = 0; i < size; i++) {
-        for (uint8_t j = 0; j < size; j++)
-            printf("%.3lf ", testeCOluna[i][j]);
-        putchar('\n');  
-    }*/
-    for (uint8_t i = 0; i < size; i++) {
-        printf("%.3lf ", valoresAtualizados[i]);
-        putchar('\n');
-    }
-    
+    Biarray *mat = io_readInput(fin, math_atoi(argv[2]), math_atoi(argv[3]));
+    io_printMat(mat);
     
     return 0;
             

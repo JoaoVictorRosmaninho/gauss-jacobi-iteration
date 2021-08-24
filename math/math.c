@@ -2,7 +2,6 @@
 # define HEADER_H
 # include "../header.h"
 #include <stdint.h>
-#include <stdio.h>
 #endif
 
 int math_pow(int base, uint8_t exp) {
@@ -28,22 +27,35 @@ static double convert(char *ini, char *end, uint8_t flag) {
 }
 
 double math_atof(char *ini_number) {
-    char *end_number = ini_number;
     double result = 0;
+    uint8_t flag = 0;
+    int8_t sign = 1;
+    if (*ini_number == '-') {
+        sign = -1;
+        ini_number++;
+    }
+    char *end_number = ini_number;
     while(*end_number) {
         if (str_isNumber(*end_number) && *(end_number + 1)) {
             end_number++;
             continue;
-        } else {
-            if (*end_number == '.')
-                result += convert(ini_number, end_number - 1, 0);
-            else 
-               result += convert(ini_number, end_number, 1);
-            end_number++;
-            ini_number = end_number;                              
         }
+        if (*end_number == '-') {
+            sign = -1;
+            end_number++;
+            continue;
+        }
+        if (*end_number == '.') {   
+            result += convert(ini_number, end_number - 1, flag);
+            flag = 1;
+        }
+        else 
+            result += convert(ini_number, end_number, flag) ;        
+        end_number++;
+        ini_number = end_number;                              
+        
     }
-    return result;
+    return (result * sign);
 }
 
 int math_atoi(char *ini_number) {
@@ -54,4 +66,8 @@ int math_atoi(char *ini_number) {
         end_number++;
     }
     return (convert(ini_number, (end_number - 1), 0));
+}
+
+void gaussJacobi(double **mat, uint16_t size) {
+
 }
