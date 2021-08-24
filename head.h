@@ -7,4 +7,3 @@ char isNumber(char ch);
 
 char isSpace(char ch);
 
-#endif
