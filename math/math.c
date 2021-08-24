@@ -68,6 +68,39 @@ int math_atoi(char *ini_number) {
     return (convert(ini_number, (end_number - 1), 0));
 }
 
-void gaussJacobi(double **mat, uint16_t size) {
+static void math_doublecpy(double *dest, double *orig, uint16_t size) {
+    for (register uint16_t index = 0; index < size; index++)
+        dest[index] = orig[index];
+}
 
+double *gaussJacobi(Biarray *ptr, double error) {
+    double *temp_values = mem_arrayAlloc(ptr->size_row);
+    double aux_values[3] = {0};
+    while (1) {
+        for (register uint16_t i = 0; i < ptr->size_row; i++) {
+            double div_aux = 1.0;
+            uint16_t index = 0;
+            for (register uint16_t j = 0; j < ptr->size_col - 1; j++) {
+                if (j != i) // errado
+                    temp_values[i] += ptr->array[i][j] * temp_values[index++];
+                if (ptr->array[i][i] != 0) 
+                    div_aux = ptr->array[i][i];            
+            }
+            temp_values[i] -= ptr->array[i][ptr->size_col - 1];
+            temp_values[i] /= div_aux;
+            uint16_t count_err = 0;
+            if (i != 0) { 
+                for (register uint16_t i = 0; i < ptr->size_row; i++) {
+                    double err = (temp_values[i] - aux_values[i]) / aux_values[i];
+                    printf("Erro para x%u: %lf\n", i, err);
+                    if (err < error)
+                        count_err++;
+               } 
+                if (count_err == ptr->size_row)
+                    return temp_values;
+            }
+            math_doublecpy(aux_values, temp_values, ptr->size_row);
+        }
+    }
+     return NULL;   
 }

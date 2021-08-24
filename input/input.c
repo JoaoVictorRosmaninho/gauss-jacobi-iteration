@@ -36,7 +36,13 @@ Biarray *io_readInput(FILE *fin, uint16_t row, uint16_t col) {
 void io_printMat(Biarray *ptr_mat) {
     for (uint16_t i = 0; i < ptr_mat->size_row; i++) {
         for (uint16_t j = 0; j < ptr_mat->size_col; j++)
-            printf("%.2lf ", ptr_mat->array[i][j]);
+            printf("%5.2lf ", ptr_mat->array[i][j]);
         putchar('\n');
     }
+}
+
+void io_printArray(double *array, uint16_t size) {
+    for (register uint16_t index = 0; index < size; index++)
+        printf("%lf ", array[index]);
+    putchar('\n');
 }

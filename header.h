@@ -37,4 +37,13 @@ int math_pow(int base, uint8_t exp);
 Biarray *mem_biArrayAlloc(uint16_t row, uint16_t col);
 
 /* */
+double *mem_arrayAlloc(int size);
+
+/* */
 void io_printMat(Biarray *ptr_mat);
+
+/**/
+double *gaussJacobi(Biarray *ptr, double error);
+
+/**/
+void io_printArray(double *array, uint16_t size);
