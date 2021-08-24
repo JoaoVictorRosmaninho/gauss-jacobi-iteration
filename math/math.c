@@ -1,7 +1,6 @@
 #ifndef HEADER_H
 # define HEADER_H
 # include "../header.h"
-#include <stdint.h>
 #endif
 
 int math_pow(int base, uint8_t exp) {
@@ -85,7 +84,7 @@ double *math_gaussJacobi(Biarray *ptr, double error) {
                     temp_values[i] += ptr->array[i][j] * temp_values[index++];
                 if (ptr->array[i][i] != 0) 
                     div_aux = ptr->array[i][i];            
-            }
+            }            
             temp_values[i] -= ptr->array[i][ptr->size_col - 1];
             temp_values[i] /= div_aux;
             uint16_t count_err = 0;
