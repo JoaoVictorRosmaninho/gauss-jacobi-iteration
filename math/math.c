@@ -73,7 +73,7 @@ static void math_doublecpy(double *dest, double *orig, uint16_t size) {
         dest[index] = orig[index];
 }
 
-double *gaussJacobi(Biarray *ptr, double error) {
+double *math_gaussJacobi(Biarray *ptr, double error) {
     double *temp_values = mem_arrayAlloc(ptr->size_row);
     double aux_values[3] = {0};
     while (1) {

@@ -43,7 +43,7 @@ double *mem_arrayAlloc(int size);
 void io_printMat(Biarray *ptr_mat);
 
 /**/
-double *gaussJacobi(Biarray *ptr, double error);
+double *math_gaussJacobi(Biarray *ptr, double error);
 
 /**/
 void io_printArray(double *array, uint16_t size);
