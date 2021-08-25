@@ -15,6 +15,8 @@ Biarray *io_readInput(FILE *fin, uint16_t row, uint16_t col) {
             number[index++] = ch;
         else if (str_isvalid(ch)){
             number[index] = '\0';
+            if (number[0] == '\0')
+                showMessage("invalid value", INVALID_VALUE);
             if (aux_col < col)
                 ptr_mat->array[aux_line][aux_col++] = math_atof(number);
             else {

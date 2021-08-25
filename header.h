@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-
 #define MAX_NUM_SIZE 20
 
 enum {INVALID_PARAMETERS, INVALID_VALUE,  OPEN_FILE_ERR, MEM_ERROR, VALUE_ERROR, INT_CONVERSION_ERROR};
@@ -44,6 +43,9 @@ void io_printMat(Biarray *ptr_mat);
 
 /**/
 double *math_gaussJacobi(Biarray *ptr, double error);
+
+/**/
+double *math_gaussSeidl(Biarray *ptr, double error);
 
 /**/
 void io_printArray(double *array, uint16_t size);

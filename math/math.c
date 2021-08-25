@@ -1,6 +1,7 @@
 #ifndef HEADER_H
 # define HEADER_H
 # include "../header.h"
+#include <stdint.h>
 #endif
 
 int math_pow(int base, uint8_t exp) {
@@ -74,32 +75,73 @@ static void math_doublecpy(double *dest, double *orig, uint16_t size) {
 
 double *math_gaussJacobi(Biarray *ptr, double error) {
     double *temp_values = mem_arrayAlloc(ptr->size_row);
-    double aux_values[3] = {0};
-    while (1) {
+    double *aux_values = mem_arrayAlloc(ptr->size_row);
+    uint16_t iteration = 0;
+
+    while (1) {       
         for (register uint16_t i = 0; i < ptr->size_row; i++) {
             double div_aux = 1.0;
-            uint16_t index = 0;
             for (register uint16_t j = 0; j < ptr->size_col - 1; j++) {
-                if (j != i) // errado
-                    temp_values[i] += ptr->array[i][j] * temp_values[index++];
-                if (ptr->array[i][i] != 0) 
-                    div_aux = ptr->array[i][i];            
+                if (j != i) 
+                    temp_values[i] += ptr->array[i][j] * aux_values[j];
+                else  
+                    div_aux = ptr->array[i][j];            
             }            
-            temp_values[i] -= ptr->array[i][ptr->size_col - 1];
-            temp_values[i] /= div_aux;
-            uint16_t count_err = 0;
-            if (i != 0) { 
-                for (register uint16_t i = 0; i < ptr->size_row; i++) {
-                    double err = (temp_values[i] - aux_values[i]) / aux_values[i];
-                    printf("Erro para x%u: %lf\n", i, err);
-                    if (err < error)
-                        count_err++;
-               } 
-                if (count_err == ptr->size_row)
-                    return temp_values;
-            }
-            math_doublecpy(aux_values, temp_values, ptr->size_row);
+            temp_values[i] = ptr->array[i][ptr->size_col - 1] - temp_values[i];
+            temp_values[i] /= div_aux;      
         }
+        if (iteration != 0) { 
+            uint16_t count_err = 0;
+            for (register uint16_t i = 0; i < ptr->size_row; i++) {
+                double err = (temp_values[i] - aux_values[i]) / aux_values[i];
+                printf("Erro para x%u: %f\n", i, err);
+                if (err < error)
+                    count_err++;
+            } 
+            if (count_err == ptr->size_row) {
+                free(temp_values);
+                return aux_values;
+                }
+            } 
+        iteration++;
+        math_doublecpy(aux_values, temp_values, ptr->size_row);
+        for (uint8_t i = 0; i < ptr->size_row; i++)
+            temp_values[i] = 0;
+    }
+     return aux_values;   
+}
+
+double *math_gaussSeidl(Biarray *ptr, double error) {
+    double *temp_values = mem_arrayAlloc(ptr->size_row);
+    double *aux_values = mem_arrayAlloc(ptr->size_row);
+    uint16_t iteration = 0;
+     double err = 1;
+     while (1) {                      
+        for (register uint16_t i = 0; i < ptr->size_row; i++) {
+            double div_aux = 1.0;
+            double aux_err;
+            for (register uint16_t j = 0; j < ptr->size_col - 1; j++) {
+                if (j != i) 
+                    temp_values[i] += ptr->array[i][j] * aux_values[j];
+                else  
+                    div_aux = ptr->array[i][j];            
+            }            
+            temp_values[i] = ptr->array[i][ptr->size_col - 1] - temp_values[i];
+            temp_values[i] /= div_aux;
+            if (iteration > 1) {
+                aux_err = (temp_values[i] - aux_values[i]) / aux_values[i];
+                if (aux_err < err) err = aux_err;
+            }            
+            aux_values[i] = temp_values[i]; 
+        }
+        iteration++;
+        printf("error: %f\n", err);
+        if (err < error) {
+            free(temp_values);
+            return aux_values;
+        }
+        for (uint8_t i = 0; i < ptr->size_row; i++)
+            temp_values[i] = 0;
     }
      return NULL;   
 }
