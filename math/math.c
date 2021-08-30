@@ -73,6 +73,18 @@ static void math_doublecpy(double *dest, double *orig, uint16_t size) {
         dest[index] = orig[index];
 }
 
+static int math_calcerr(double *value_xi, double *value_x0, double error, uint16_t iteration) {
+   uint16_t count_err = 0;
+   for (register uint16_t i = 0; i < iteration; i++) {
+     double err = (value_xi[i] - value_x0[i]) / value_x0[i];
+     printf("%5s x%u: %1f\n", "Error para:", i, err);
+     if (err < error)
+       count_err++;
+   }
+   putchar('\n');
+   return (count_err == iteration);
+}
+
 double *math_gaussJacobi(Biarray *ptr, double error) {
     double *temp_values = mem_arrayAlloc(ptr->size_row);
     double *aux_values = mem_arrayAlloc(ptr->size_row);
@@ -90,23 +102,13 @@ double *math_gaussJacobi(Biarray *ptr, double error) {
             temp_values[i] = ptr->array[i][ptr->size_col - 1] - temp_values[i];
             temp_values[i] /= div_aux;      
         }
-        if (iteration != 0) { 
-            uint16_t count_err = 0;
-            for (register uint16_t i = 0; i < ptr->size_row; i++) {
-                double err = (temp_values[i] - aux_values[i]) / aux_values[i];
-                printf("Erro para x%u: %f\n", i, err);
-                if (err < error)
-                    count_err++;
-            } 
-            if (count_err == ptr->size_row) {
-                free(temp_values);
-                return aux_values;
-                }
-            } 
+        if (iteration != 0)
+          if (math_calcerr(temp_values, aux_values, error, ptr->size_row))
+            return aux_values;           
         iteration++;
         math_doublecpy(aux_values, temp_values, ptr->size_row);
-        for (uint8_t i = 0; i < ptr->size_row; i++)
-            temp_values[i] = 0;
+        memclear(temp_values, 0, ptr->size_row * sizeof(double));
+        
     }
      return aux_values;   
 }
@@ -140,8 +142,7 @@ double *math_gaussSeidl(Biarray *ptr, double error) {
             free(temp_values);
             return aux_values;
         }
-        for (uint8_t i = 0; i < ptr->size_row; i++)
-            temp_values[i] = 0;
+        memclear(temp_values, 0, ptr->size_row * sizeof(double));
     }
      return NULL;   
 }

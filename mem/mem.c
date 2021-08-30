@@ -5,7 +5,6 @@
 #endif
 
 Biarray *mem_biArrayAlloc(uint16_t row, uint16_t col) {
-    double **ptr = 0;
     Biarray *ptr_mat = 0;
     if ((ptr_mat = (Biarray *) calloc(1, sizeof(Biarray))) == NULL)
         showMessage("Err, insuficient memory",MEM_ERROR);
@@ -25,5 +24,11 @@ double *mem_arrayAlloc(int size) {
      if ((ptr = (double *) calloc(size, sizeof(double))) == NULL)
         showMessage("Err, insuficient memory", MEM_ERROR);
     return (ptr);
+}
+
+void memclear(void *ptr, int8_t value, size_t size) {
+  char *ptr_aux = (char *) ptr;
+  for (uint8_t index = 0; index < size; index++)
+    ptr_aux[index] = value;
 }
 

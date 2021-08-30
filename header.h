@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
-
+#include <string.h>
 #define MAX_NUM_SIZE 20
 
 enum {INVALID_PARAMETERS, INVALID_VALUE,  OPEN_FILE_ERR, MEM_ERROR, VALUE_ERROR, INT_CONVERSION_ERROR};
@@ -49,3 +49,6 @@ double *math_gaussSeidl(Biarray *ptr, double error);
 
 /**/
 void io_printArray(double *array, uint16_t size);
+
+/* */
+void memclear(void *ptr, int8_t value, size_t size);
