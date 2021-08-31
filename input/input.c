@@ -48,3 +48,30 @@ void io_printArray(double *array, uint16_t size) {
         printf("%lf ", array[index]);
     putchar('\n');
 }
+
+void io_displayNumericResult(Biarray *ptr, char *name) {
+    printf("####### %s #######\n", name);
+    for (uint8_t i = 0; i < ptr->size_row; i++)
+        printf("%3s%u\t", "X", i);
+    putchar('\n');
+    puts("\tError");
+    for (uint8_t i = 0; i < ptr->size_row; i++)
+        printf("%8.2E ", ptr->err[i]);
+    putchar('\n');
+    puts("\tResultado");
+    for (uint8_t i = 0; i < ptr->size_row; i++)
+        printf("%5.2f\t", ptr->result[i]);
+    putchar('\n');    
+}
+
+void io_displayAnaliticResult(Biarray *ptr, char *name) {
+    printf("####### %s #######\n", name);
+    for (uint8_t i = 0; i < ptr->size_row; i++)
+        printf("%3s%u\t", "X", i);
+    putchar('\n');
+    puts("\tResultado");
+    for (uint16_t i = 0; i < ptr->size_row; i++)
+        printf("%5.2f\t", (ptr->array[i][ptr->size_col - 1] / ptr->array[i][i]));
+    putchar('\n');
+        
+}

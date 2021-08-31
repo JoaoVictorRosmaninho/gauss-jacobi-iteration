@@ -73,16 +73,20 @@ static void math_doublecpy(double *dest, double *orig, uint16_t size) {
         dest[index] = orig[index];
 }
 
-static int math_calcerr(double *value_xi, double *value_x0, double error, uint16_t iteration) {
+static double *math_calcerr(double *value_xi, double *value_x0, double error, uint16_t iteration) {
    uint16_t count_err = 0;
+   double errArray[iteration];
    for (register uint16_t i = 0; i < iteration; i++) {
-     double err = (value_xi[i] - value_x0[i]) / value_x0[i];
-     printf("%5s x%u: %1f\n", "Error para:", i, err);
-     if (err < error)
+     errArray[i] = (value_xi[i] - value_x0[i]) / value_x0[i];
+     if (errArray[i] < error)
        count_err++;
    }
-   putchar('\n');
-   return (count_err == iteration);
+   if (count_err == iteration) {
+       double *errResult = mem_arrayAlloc(iteration);
+       math_doublecpy(errResult, errArray, iteration);
+       return (errResult);
+   }
+   return 0;
 }
 
 double *math_gaussJacobi(Biarray *ptr, double error) {
@@ -103,14 +107,16 @@ double *math_gaussJacobi(Biarray *ptr, double error) {
             temp_values[i] /= div_aux;      
         }
         if (iteration != 0)
-          if (math_calcerr(temp_values, aux_values, error, ptr->size_row))
-            return aux_values;           
+          if ((ptr->err = math_calcerr(temp_values, aux_values, error, ptr->size_row))) {
+            free(temp_values);
+            ptr->result = aux_values;
+            return aux_values;
+          }           
         iteration++;
         math_doublecpy(aux_values, temp_values, ptr->size_row);
-        memclear(temp_values, 0, ptr->size_row * sizeof(double));
-        
+        memclear(temp_values, 0, ptr->size_row * sizeof(double));        
     }
-     return aux_values;   
+     return NULL;   
 }
 
 double *math_gaussSeidl(Biarray *ptr, double error) {
@@ -145,4 +151,36 @@ double *math_gaussSeidl(Biarray *ptr, double error) {
         memclear(temp_values, 0, ptr->size_row * sizeof(double));
     }
      return NULL;   
+}
+
+
+int math_gaussJordan(Biarray *ptr) //triangularização da matriz
+{
+	int linha = 0, coluna = 0, coluna2 = 0;
+    float mult = 0.0;
+	for (coluna = 0; coluna < ptr->size_col; coluna++) //triangularização inferior esquerda
+	{
+		for (linha = coluna + 1; linha < ptr->size_row; linha++)
+		{
+			if (ptr->array[linha][coluna] == 0) continue;
+			mult = (float)(ptr->array[linha][coluna] / ptr->array[coluna][coluna]);		// <----- meu pivo
+      for (coluna2 = coluna; coluna2 <= ptr->size_row; coluna2++)
+			{
+				ptr->array[linha][coluna2] = ptr->array[linha][coluna2] - (ptr->array[coluna][coluna2] * mult);
+		  }
+		}
+	}
+	for (coluna = (ptr->size_row - 1); coluna > 0; coluna--)
+	{
+		for (linha = coluna - 1; linha >= 0; linha--)
+		{
+			if (ptr->array[linha][coluna] == 0) continue;
+			mult = (float)(ptr->array[linha][coluna] / ptr->array[coluna][coluna]);		// <----- meu pivo
+			for (coluna2 = (ptr->size_col - 1); coluna2 > 0; coluna2--) //triangularização superior direita
+			{
+				ptr->array[linha][coluna2] = ptr->array[linha][coluna2] - (ptr->array[coluna][coluna2] * mult);
+			}
+		}
+	}
+	return (1);
 }
