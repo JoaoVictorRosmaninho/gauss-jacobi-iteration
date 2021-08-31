@@ -160,14 +160,12 @@ int math_gaussJordan(Biarray *ptr) //triangularização da matriz
     float mult = 0.0;
 	for (coluna = 0; coluna < ptr->size_col; coluna++) //triangularização inferior esquerda
 	{
-		for (linha = coluna + 1; linha < ptr->size_row; linha++)
-		{
+		for (linha = coluna + 1; linha < ptr->size_row; linha++) {
 			if (ptr->array[linha][coluna] == 0) continue;
 			mult = (float)(ptr->array[linha][coluna] / ptr->array[coluna][coluna]);		// <----- meu pivo
-      for (coluna2 = coluna; coluna2 <= ptr->size_row; coluna2++)
-			{
+            for (coluna2 = coluna; coluna2 <= ptr->size_row; coluna2++) {
 				ptr->array[linha][coluna2] = ptr->array[linha][coluna2] - (ptr->array[coluna][coluna2] * mult);
-		  }
+	        }
 		}
 	}
 	for (coluna = (ptr->size_row - 1); coluna > 0; coluna--)
