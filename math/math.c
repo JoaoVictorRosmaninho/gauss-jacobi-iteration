@@ -122,12 +122,12 @@ double *math_gaussJacobi(Biarray *ptr, double error) {
 double *math_gaussSeidl(Biarray *ptr, double error) {
     double *temp_values = mem_arrayAlloc(ptr->size_row);
     double *aux_values = mem_arrayAlloc(ptr->size_row);
+    double *aux_erro = mem_arrayAlloc(ptr->size_row);
     uint16_t iteration = 0;
-     double err = 1;
+     double err;
      while (1) {                      
         for (register uint16_t i = 0; i < ptr->size_row; i++) {
             double div_aux = 1.0;
-            double aux_err;
             for (register uint16_t j = 0; j < ptr->size_col - 1; j++) {
                 if (j != i) 
                     temp_values[i] += ptr->array[i][j] * aux_values[j];
@@ -136,18 +136,23 @@ double *math_gaussSeidl(Biarray *ptr, double error) {
             }            
             temp_values[i] = ptr->array[i][ptr->size_col - 1] - temp_values[i];
             temp_values[i] /= div_aux;
-            if (iteration > 1) {
-                aux_err = (temp_values[i] - aux_values[i]) / aux_values[i];
-                if (aux_err < err) err = aux_err;
+            aux_values[i] = temp_values[i];
+            
+            if (aux_values[i] != 0) {
+                aux_erro[i] = (temp_values[i] - aux_values[i]) / aux_values[i];
+                if (iteration == 0)  err = aux_erro[i];
+                if (err < aux_erro[i]) err = aux_erro[i];
             }            
-            aux_values[i] = temp_values[i]; 
+            aux_values[i] = temp_values[i];
         }
-        iteration++;
-        printf("error: %f\n", err);
+        
         if (err < error) {
             free(temp_values);
+            ptr->err = aux_erro;
+            ptr->result = aux_values;
             return aux_values;
         }
+        iteration++;
         memclear(temp_values, 0, ptr->size_row * sizeof(double));
     }
      return NULL;   
@@ -163,19 +168,24 @@ int math_gaussJordan(Biarray *ptr) //triangularização da matriz
 		for (linha = coluna + 1; linha < ptr->size_row; linha++) {
 			if (ptr->array[linha][coluna] == 0) continue;
 			mult = (float)(ptr->array[linha][coluna] / ptr->array[coluna][coluna]);		// <----- meu pivo
+<<<<<<< HEAD
             for (coluna2 = coluna; coluna2 <= ptr->size_row; coluna2++) {
 				ptr->array[linha][coluna2] = ptr->array[linha][coluna2] - (ptr->array[coluna][coluna2] * mult);
 	        }
+=======
+            for (coluna2 = coluna; coluna2 <= ptr->size_row; coluna2++){
+				ptr->array[linha][coluna2] = ptr->array[linha][coluna2] - (ptr->array[coluna][coluna2] * mult);
+		    }
+>>>>>>> 0c17cc1e0a6708151dcdbaeff4f2c9565935cfbb
 		}
 	}
-	for (coluna = (ptr->size_row - 1); coluna > 0; coluna--)
+	for (coluna = (ptr->size_row - 1); coluna > 0; coluna--) //triangularização superior direita
 	{
 		for (linha = coluna - 1; linha >= 0; linha--)
 		{
 			if (ptr->array[linha][coluna] == 0) continue;
 			mult = (float)(ptr->array[linha][coluna] / ptr->array[coluna][coluna]);		// <----- meu pivo
-			for (coluna2 = (ptr->size_col - 1); coluna2 > 0; coluna2--) //triangularização superior direita
-			{
+			for (coluna2 = (ptr->size_col - 1); coluna2 > 0; coluna2--){
 				ptr->array[linha][coluna2] = ptr->array[linha][coluna2] - (ptr->array[coluna][coluna2] * mult);
 			}
 		}
