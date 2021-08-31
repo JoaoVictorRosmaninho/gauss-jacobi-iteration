@@ -10,13 +10,20 @@ int main(int argc, char *argv[]) {
     FILE *fin;
     if ((fin = fopen(argv[1], "r")) == NULL)
         showMessage("Error opening file", OPEN_FILE_ERR);    
-    Biarray *mat = io_readInput(fin, math_atoi(argv[2]), math_atoi(argv[3]));
-    Biarray *matgauss = mem_biArrayAlloc(mat->size_row, mat->size_col);
-    mem_memcpy(matgauss, mat, sizeof(Biarray));
-    math_gaussJacobi(mat, 10E-4);
+    Biarray *matGJ = io_readInput(fin, math_atoi(argv[2]), math_atoi(argv[3]));
+    Biarray *matGS = mem_biArrayAlloc(math_atoi(argv[2]), math_atoi(argv[3]));
+    Biarray *matgauss = mem_biArrayAlloc(math_atoi(argv[2]), math_atoi(argv[3]));
+    mem_memcpy(matgauss, matGJ, sizeof(Biarray));
+    mem_memcpy(matGS, matGJ, sizeof(Biarray));
+
     math_gaussJordan(matgauss);
-    io_displayNumericResult(mat, "Gauss-Jacobi");  
     io_displayAnaliticResult(matgauss, "Gauss-Jordan");
+
+    math_gaussJacobi(matGJ, 10E-4);
+    io_displayNumericResult(matGJ, "Gauss-Jacobi"); 
+
+    math_gaussSeidl(matGS, 10E-4);
+    io_displayNumericResult(matGS, "Gauss-Seidel");
 
     
     return 0;           
